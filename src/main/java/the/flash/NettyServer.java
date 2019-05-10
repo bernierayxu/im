@@ -8,6 +8,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import the.flash.Handler.LoginRequestHandler;
+import the.flash.Handler.PacketDecoder;
+import the.flash.Handler.PacketEncoder;
 
 public class NettyServer {
     public static void main(String[] args) {
@@ -21,7 +24,10 @@ public class NettyServer {
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new LoginServerHandler());
+//                        ch.pipeline().addLast(new LoginServerHandler());
+                        ch.pipeline().addLast(new PacketDecoder())
+                                .addLast(new LoginRequestHandler())
+                                .addLast(new PacketEncoder());
                     }
                 });
 

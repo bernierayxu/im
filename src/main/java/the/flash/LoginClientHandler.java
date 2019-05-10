@@ -3,8 +3,7 @@ package the.flash;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import the.flash.Commands.LoginRequestPacket;
-import the.flash.Commands.PacketCodeC;
+import the.flash.Commands.*;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -24,7 +23,23 @@ public class LoginClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf = (ByteBuf) msg;
-        System.out.println("Received message " + ((ByteBuf) msg).toString(Charset.forName("UTF-8")));
+//        System.out.println(((ByteBuf) msg).toString(Charset.forName("UTF-8")));
+        Packet packet = PacketCodeC.INSTANCE.decode((ByteBuf) msg);
+        if(packet instanceof LoginResponsePacket) {
+            LoginResponsePacket loginPacket = (LoginResponsePacket) packet;
+
+            if(loginPacket.isSuccessful()) {
+                LoginUtil.markLogin(ctx.channel());
+                System.out.println(loginPacket.getCode());
+            } else {
+
+                System.out.println(loginPacket.getCode() + " " + loginPacket.getReason());
+            }
+
+        } else if(packet instanceof MessageResponsePacket) {
+            MessageResponsePacket messagePacket = (MessageResponsePacket) packet;
+            System.out.println(messagePacket.getMessage());
+        }
+
     }
 }
