@@ -11,6 +11,7 @@ import the.flash.Commands.Packet;
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket msg) throws Exception {
+        System.out.println("LoginRequestHandler");
         ctx.channel().writeAndFlush(login(msg));
     }
 
@@ -26,6 +27,6 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     }
 
     private boolean validateLogin(LoginRequestPacket packet) {
-        return true;
+        return false;
     }
 }
