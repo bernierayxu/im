@@ -9,7 +9,7 @@ import the.flash.Commands.PacketCodeC;
 public class PacketEncoder extends MessageToByteEncoder<Packet> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
-        System.out.println("PacketEncoder");
+//        System.out.println("PacketEncoder");
         PacketCodeC.INSTANCE.encodeV2(out, msg);
     }
 }

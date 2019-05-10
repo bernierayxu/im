@@ -16,7 +16,7 @@ import static the.flash.Commands.Command.*;
 import static the.flash.Serializer.SerializerAlgorithm.*;
 
 public class PacketCodeC {
-    private static int MAGIC_NUMBER = 0x12345678;
+    public static int MAGIC_NUMBER = 0x12345678;
     public static final PacketCodeC INSTANCE = new PacketCodeC();
     private final Map<Byte, Class <? extends Packet>> packetMap;
     private final Map<Byte, Serializer> serializerMap;

@@ -8,11 +8,10 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import the.flash.Commands.MessageRequestPacket;
 import the.flash.Commands.PacketCodeC;
-import the.flash.Handler.LoginResponseHandler;
-import the.flash.Handler.PacketDecoder;
-import the.flash.Handler.PacketEncoder;
+import the.flash.Handler.*;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -28,8 +27,10 @@ public class NettyClient {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
 //                socketChannel.pipeline().addLast(new LoginClientHandler());
-                socketChannel.pipeline().addLast(new PacketDecoder())
+                socketChannel.pipeline().addLast(new Spliter())
+                        .addLast(new PacketDecoder())
                         .addLast(new LoginResponseHandler())
+                        .addLast(new MessageResponseHandler())
                         .addLast(new PacketEncoder());
             }
         });
@@ -71,6 +72,7 @@ public class NettyClient {
                     packet.setMessage(line);
                     ByteBuf buf = PacketCodeC.INSTANCE.encode(channel.alloc().ioBuffer(), packet);
                     channel.writeAndFlush(buf);
+
                 }
 
             }

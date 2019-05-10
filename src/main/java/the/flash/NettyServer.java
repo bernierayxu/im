@@ -5,12 +5,11 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import the.flash.Handler.LoginRequestHandler;
-import the.flash.Handler.PacketDecoder;
-import the.flash.Handler.PacketEncoder;
+import the.flash.Handler.*;
 
 public class NettyServer {
     public static void main(String[] args) {
@@ -25,8 +24,12 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
 //                        ch.pipeline().addLast(new LoginServerHandler());
-                        ch.pipeline().addLast(new PacketDecoder())
+                        ch.pipeline().addLast(new LifeCyCleTestHandler())
+                                .addLast((new Spliter()))
+                                .addLast(new PacketDecoder())
                                 .addLast(new LoginRequestHandler())
+                                .addLast(new AuthHandler())
+                                .addLast(new MessageRequestHandler())
                                 .addLast(new PacketEncoder());
                     }
                 });
