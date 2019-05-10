@@ -20,7 +20,7 @@ public class NettyClient {
 
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
-                socketChannel.pipeline().addLast(new FirstClientHandler());
+                socketChannel.pipeline().addLast(new LoginClientHandler());
             }
         });
         connect(bootstrap, "localhost", 8000, MAX_RETRY);
