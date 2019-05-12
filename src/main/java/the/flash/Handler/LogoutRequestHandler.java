@@ -1,0 +1,20 @@
+package the.flash.Handler;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import the.flash.Commands.LogoutRequestPacket;
+import the.flash.Commands.LogoutResponsePacket;
+import the.flash.LoginUtil;
+
+import java.util.Date;
+
+public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequestPacket> {
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, LogoutRequestPacket msg) throws Exception {
+        System.out.println(new Date() + "  " +LoginUtil.getSession(ctx.channel()).getUserName() + " has logged out!");
+        LoginUtil.unbindSession(ctx.channel());
+        LogoutResponsePacket packet = new LogoutResponsePacket();
+        ctx.channel().writeAndFlush(packet);
+
+    }
+}

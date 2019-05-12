@@ -13,7 +13,6 @@ public class LoginClientHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         LoginRequestPacket packet = new LoginRequestPacket();
         packet.setVersion((byte)1);
-        packet.setUserId(UUID.randomUUID().toString());
         packet.setUsername("Ray");
         packet.setPassword("You can do it!");
         ByteBuf buffer = ctx.alloc().buffer();
@@ -29,7 +28,7 @@ public class LoginClientHandler extends ChannelInboundHandlerAdapter {
             LoginResponsePacket loginPacket = (LoginResponsePacket) packet;
 
             if(loginPacket.isSuccessful()) {
-                LoginUtil.markLogin(ctx.channel());
+//                LoginUtil.markLogin(ctx.channel());
                 System.out.println(loginPacket.getCode());
             } else {
 

@@ -6,6 +6,7 @@ import the.flash.Commands.LoginRequestPacket;
 import the.flash.Commands.LoginResponsePacket;
 import the.flash.Commands.Packet;
 import the.flash.LoginUtil;
+import the.flash.Session;
 
 import java.util.UUID;
 
@@ -14,19 +15,15 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket msg) throws Exception {
         if(msg.isSuccessful()) {
             System.out.println("Valid Login");
-            LoginUtil.markLogin(ctx.channel());
+
+            LoginUtil.bindSession(new Session(msg.getUserId(), msg.getUserName()), ctx.channel());
         } else {
             System.out.println(msg.getReason());
         }
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-//        System.out.println("LoginResponseHandler");
-        LoginRequestPacket packet = new LoginRequestPacket();
-        packet.setUserId(UUID.randomUUID().toString());
-        packet.setUsername("Ray");
-        packet.setPassword("You can do it");
-        ctx.channel().writeAndFlush(packet);
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("客户端连接被关闭!");
     }
 }

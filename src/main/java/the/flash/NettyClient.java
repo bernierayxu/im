@@ -9,8 +9,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import the.flash.Commands.LoginRequestPacket;
 import the.flash.Commands.MessageRequestPacket;
 import the.flash.Commands.PacketCodeC;
+import the.flash.Console.ConsoleManager;
+import the.flash.Console.LoginConsole;
 import the.flash.Handler.*;
 
 import java.util.Date;
@@ -30,7 +33,9 @@ public class NettyClient {
                 socketChannel.pipeline().addLast(new Spliter())
                         .addLast(new PacketDecoder())
                         .addLast(new LoginResponseHandler())
+                        .addLast(new LogoutResponseHandler())
                         .addLast(new MessageResponseHandler())
+                        .addLast(new GroupCreateResponseHandler())
                         .addLast(new PacketEncoder());
             }
         });
@@ -61,23 +66,28 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        Scanner scanner = new Scanner(System.in);
         new Thread(()->{
             while(!Thread.interrupted()) {
                 if(LoginUtil.hasLogin(channel)) {
-                    System.out.println("发送消息到服务端");
-
-                    Scanner scanner = new Scanner(System.in);
-                    String line = scanner.nextLine();
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setMessage(line);
-                    ByteBuf buf = PacketCodeC.INSTANCE.encode(channel.alloc().ioBuffer(), packet);
-                    channel.writeAndFlush(buf);
-
+                    new ConsoleManager().exec(channel, scanner);
+                } else {
+                    new LoginConsole().exec(channel, scanner);
+                    waitForResponse();
                 }
 
             }
 
 
         }).start();
+    }
+
+    private static void waitForResponse() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

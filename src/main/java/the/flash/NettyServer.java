@@ -24,12 +24,14 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
 //                        ch.pipeline().addLast(new LoginServerHandler());
-                        ch.pipeline().addLast(new LifeCyCleTestHandler())
-                                .addLast((new Spliter()))
+//                        ch.pipeline().addLast(new LifeCyCleTestHandler())
+                        ch.pipeline().addLast((new Spliter()))
                                 .addLast(new PacketDecoder())
                                 .addLast(new LoginRequestHandler())
+                                .addLast(new LogoutRequestHandler())
                                 .addLast(new AuthHandler())
                                 .addLast(new MessageRequestHandler())
+                                .addLast(new GroupCreateRequestHandler())
                                 .addLast(new PacketEncoder());
                     }
                 });

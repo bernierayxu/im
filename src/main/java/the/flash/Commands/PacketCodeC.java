@@ -26,6 +26,10 @@ public class PacketCodeC {
         packetMap.put(LOGIN_RESPONSE, LoginResponsePacket.class);
         packetMap.put(MESSAGE_REQUEST, MessageRequestPacket.class);
         packetMap.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetMap.put(GROUP_CREATE_REQUEST, GroupCreateRequestPacket.class);
+        packetMap.put(GROUP_CREATE_RESPONSE, GroupCreateResponsePacket.class);
+        packetMap.put(LOGOUT_REQUEST, LogoutRequestPacket.class);
+        packetMap.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
         serializerMap = new HashMap<>();
         serializerMap.put(JSON, new JsonSerializer());
     }

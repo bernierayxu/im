@@ -8,6 +8,8 @@ import static the.flash.Commands.Command.LOGIN_RESPONSE;
 public class LoginResponsePacket extends Packet {
     private int code;
     private String reason;
+    private String userId;
+    private String userName;
     @Override
     public Byte getCommand() {
         return LOGIN_RESPONSE;
